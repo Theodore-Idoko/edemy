@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
     default: ['Subscriber'],
     enum:['Subscriber', 'Instructor', 'Admin']
   }, 
+  passwordResetCode: {
+    data: String,
+    default:''
+  }
 },{ timestamps: true})
 
 
