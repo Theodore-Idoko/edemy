@@ -24,7 +24,7 @@ const ForgotPassword = () => {
   // redirect if user is logged in
   useEffect(() => {
     if (user !== null) router.push("/");
-  }, []);
+  }, [user]);
 
   const handleResetPassword = async (e) => {
     e.preventDefault()

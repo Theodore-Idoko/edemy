@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import {Menu} from 'antd';
 import Link from 'next/link';
-import { AppstoreOutlined, LoginOutlined, LogoutOutlined, UserAddOutlined, CoffeeOutlined} from '@ant-design/icons';
+import { AppstoreOutlined, LoginOutlined, LogoutOutlined, UserAddOutlined, CoffeeOutlined, CarryOutOutlined, TeamOutlined} from '@ant-design/icons';
 import {Context} from '../context';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -38,6 +38,20 @@ const TopNav = () => {
           <a>App</a>
         </Link>
       </Item>
+      {user && user.role && user.role.includes('Instructor') ? (
+         <Item key='/instructor/course/create' onClick={(e) => setCurrent(e.key)} icon={<CarryOutOutlined/>}>
+         <Link href='/instructor/course/create'>
+           <a>Create Course</a>
+         </Link>
+       </Item>
+      ) : (
+        <Item key='/user/become-instructor' onClick={(e) => setCurrent(e.key)} icon={<TeamOutlined/>}>
+        <Link href='/user/become-instructor'>
+          <a>Become Instructor</a>
+        </Link>
+      </Item>
+      )}
+      
       {user === null && (
       <>
       <Item key='/login' onClick={(e) => setCurrent(e.key)} icon={<LoginOutlined/>}>
@@ -53,7 +67,18 @@ const TopNav = () => {
       </Item>
          </>
       )}
-
+       {user && user.role && user.role.includes("Instructor") && (
+        <Item
+          key="/instructor"
+          onClick={(e) => setCurrent(e.key)}
+          icon={<TeamOutlined />}
+          className="ms-auto"
+        >
+          <Link href="/instructor">
+            <a>Instructor</a>
+          </Link>
+        </Item>
+      )}
       {user !== null && (
          <SubMenu
           icon={<CoffeeOutlined/>}
@@ -72,6 +97,7 @@ const TopNav = () => {
           </ItemGroup>
          </SubMenu>
       )}
+     
     </Menu>
   )
 }
