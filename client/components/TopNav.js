@@ -72,7 +72,7 @@ const TopNav = () => {
           key="/instructor"
           onClick={(e) => setCurrent(e.key)}
           icon={<TeamOutlined />}
-          className="ms-auto"
+          className="float-right"
         >
           <Link href="/instructor">
             <a>Instructor</a>
@@ -83,7 +83,7 @@ const TopNav = () => {
          <SubMenu
           icon={<CoffeeOutlined/>}
           title={user && user.name}
-          className='ms-auto'
+          className='float-right'
          >
           <ItemGroup>
             <Item key='/user'>
