@@ -25,6 +25,8 @@
     "nanoid": "^3.1.23",
     "nodemon": "^2.0.12",
     "query-string": "^7.0.1",
+    "react-markdown": "^7.0.0",
+    "slugify": "^1.6.0",
     "stripe": "^8.169.0"
   }
 }
