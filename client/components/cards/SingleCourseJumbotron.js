@@ -1,13 +1,25 @@
-import {Badge, Modal} from 'antd'
+import { useContext } from "react";
+import {Badge, Button} from 'antd'
 import { currencyFormatter } from '../../utils/helpers';
 import ReactPlayer from 'react-player'
+import {
+  SafetyOutlined,
+  LoadingOutlined,
+  PlayCircleFilled,
+} from "@ant-design/icons";
+import { Context } from "../../context";
 
 const SingleCourseJumbotron = ({
   course,
   setPreview,
   preview,
   showModal,
-  setShowModal
+  setShowModal,
+  loading,
+  handleFreeEnrollment,
+  handlePaidEnrollment,
+  enrolled,
+  setEnrolled,
 }) => {
    // destructure
    const {
@@ -21,6 +33,12 @@ const SingleCourseJumbotron = ({
     paid,
     category,
   } = course;
+
+   // context
+   const {
+    state: { user },
+  } = useContext(Context);
+
  return (
   <div className='jumbotron bg-primary square'>
   <div className='row'>
@@ -69,6 +87,26 @@ const SingleCourseJumbotron = ({
             />
          </>
        )}
+       <Button
+            className="mb-3"
+            type="danger"
+            block
+            shape="round"
+            icon={<SafetyOutlined />}
+            size="large"
+            disabled={loading}
+            onClick={paid ? handlePaidEnrollment : handleFreeEnrollment}
+            // style={{ width: "342px" }}
+          >
+            {user
+              ? enrolled.status
+                ? "Go to course"
+                : // <Link href={`/user/course/${enrolled.course.slug}`}>
+                  //   <a className="text-light"> Go to course</a>
+                  // </Link>
+                  "Enroll"
+              : "Login to enroll"}
+          </Button>
    </div>
   </div>
 </div>

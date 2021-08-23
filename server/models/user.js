@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { ObjectId } = mongoose.Schema;
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -35,7 +37,8 @@ const userSchema = new mongoose.Schema({
   passwordResetCode: {
     data: String,
     default:''
-  }
+  },
+  courses:[{ type: ObjectId, ref:'Course'}]
 },{ timestamps: true})
 
 
