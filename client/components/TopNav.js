@@ -32,10 +32,10 @@ const TopNav = () => {
   }
 
   return (
-    <Menu mode='horizontal'selectedKeys={[current]}>
+    <Menu theme='dark' mode='horizontal'selectedKeys={[current]}>
        <Item key='/' onClick={(e) => setCurrent(e.key)} icon={<AppstoreOutlined/>}>
         <Link href='/'>
-          <a>App</a>
+          <a>EDEMY</a>
         </Link>
       </Item>
       {user && user.role && user.role.includes('Instructor') ? (

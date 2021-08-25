@@ -82,3 +82,62 @@ export const instructorCourses = async (req, res) => {
   }
 };
 
+export const studentCount = async (req, res) => {
+  try {
+    // console.log("req.body.courseId", req.body.courseId);
+    const users = await User.find({ courses: req.body.courseId })
+      .select("_id")
+      .exec();
+    // console.log("user count", users);
+    res.json(users);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const instructorBalance = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id).exec();
+    const balance = await stripe.balance.retrieve({
+      stripeAccount: user.stripe_account_id,
+    });
+
+    // console.log("BALANCE =====> ", balance);
+    res.json(balance);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const instructorPayoutSettings = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id).exec();
+    const loginLink = await stripe.accounts.createLoginLink(
+      user.stripe_seller.id,
+      { redirect_url: process.env.STRIPE_SETTINGS_REDIRECT_URL }
+    );
+    // console.log("loginLink ======> ", loginLink);
+    res.json(loginLink.url);
+  } catch (err) {
+    console.log("stripe payout setting login link err ======> ", err);
+  }
+};
+
+export const questionCount = async (req, res) => {
+  try {
+    const courses = await Course.find({ instructor: req.user._id })
+      .select("_id")
+      .exec();
+
+    const total = await Qa.find({ courseId: courses })
+      .select("courseId")
+      .exec();
+
+    // console.log("***TOTAL***", total);
+    res.json(total.length);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+

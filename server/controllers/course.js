@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import slugify from "slugify";
 import Course from "../models/course";
 import User from "../models/user";
+import Completed from '../models/completed'
 import {readFileSync} from 'fs'
 const stripe= require('stripe')(process.env.STRIPE_SECRET)
 
@@ -427,6 +428,77 @@ export const stripeSuccess = async (req, res) => {
     res.json({ success: false });
   }
 };
+
+export const userCourses = async (req, res) => {
+  // console.log("all courses");
+  const user = await User.findById(req.user._id).exec();
+  const courses = await Course.find({ _id: { $in: user.courses } })
+    .populate("instructor", "_id name")
+    .sort({ createdAt: -1 })
+    .exec();
+  // console.log("USER COURSES ============> ", courses);
+  res.json(courses);
+};
+
+export const markCompleted = async (req, res) => {
+  const { courseId, lessonId } = req.body;
+  // find if user with that course is already created
+  const existing = await Completed.findOne({
+    user: req.user._id,
+    course: courseId,
+  }).exec();
+  // console.log("EXISTING ", existing);
+  if (existing) {
+    // console.log("UPDATE");
+    const updated = await Completed.findOneAndUpdate(
+      { user: req.user._id, course: courseId },
+      {
+        $addToSet: { lessons: lessonId },
+      }
+    ).exec();
+    // console.log("UPDATED", updated);
+    res.json({ ok: true });
+  } else {
+    const created = await new Completed({
+      user: req.user._id,
+      course: courseId,
+      lessons: lessonId,
+    }).save();
+    // console.log("CREATED NEW COMPLETED", created);
+    res.json({ ok: true });
+  }
+};
+
+export const listCompleted = async (req, res) => {
+  try {
+    let list = await Completed.findOne({
+      user: req.user._id,
+      course: req.body.courseId,
+    }).exec();
+    // console.log("LIST ===> ", list);
+    list && res.json(list.lessons);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const markIncomplete = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.body;
+
+    const updated = await Completed.findOneAndUpdate(
+      { user: req.user._id, course: courseId },
+      {
+        $pull: { lessons: lessonId },
+      }
+    ).exec();
+    // console.log("UPDATED", updated);
+    res.json({ ok: true });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 
 
 
